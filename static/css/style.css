@@ -1,0 +1,847 @@
+/* 🌐 기본 설정 */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* 🆔 타이포그래피 계층화 */
+  --font-heading: 700 2rem/1.2 'Inter', sans-serif;
+  --font-subheading: 600 1.5rem/1.3 'Inter', sans-serif;
+  --font-body: 400 1rem/1.6 'Inter', sans-serif;
+  --font-label: 600 0.95rem/1.4 'Inter', sans-serif;
+  --font-meta: 500 0.875rem/1.4 'Inter', sans-serif;
+  --font-chip: 400 0.875rem/1.2 'Inter', sans-serif;
+
+  /* 텍스트 색상 */
+  --text-heading: #0f172a;
+  --text-main: #1f2937;
+  --text-strong: #111827;
+  --text-sub: #475569;
+  --text-muted: #64748b;
+  --text-faded: #9ca3af;
+
+  /* 🎨 컬러 시스템 */
+  --primary: #2563eb;
+  --primary-dark: #1e40af;
+  --primary-light: #3b82f6;
+
+  --accent-light: #e0f2fe;
+  --accent-medium: #bae6fd;
+  --accent-text: #0369a1;
+  --accent-hover-text: #0c4a6e;
+
+  --white: #ffffff;
+  --gray-50: #f9fafb;
+  --gray-100: #f1f5f9;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-500: #64748b;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1f2937;
+
+  --danger: #e74c3c;
+  --danger-dark: #b91c1c;
+
+  --audio-blue: #007bff;
+  --audio-gray: #e2e8f0;
+
+  /* 배경 색상 */
+  --bg-main: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-modal: #f9fbfc;
+  --bg-light: #f9fafb;
+  --bg-hover: #e0edff;
+
+  /* 테두리 색상 */
+  --border-light: #e2e8f0;
+  --border-dark: #dbeafe;
+
+  /* 그림자 효과 */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.03);
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-hover-blue: 0 8px 24px rgba(37, 99, 235, 0.3);
+
+  /* 버튼 스타일 */
+  --btn-shadow: 0 4px 14px rgba(37, 99, 235, 0.15);
+  --btn-shadow-hover: 0 8px 24px rgba(37, 99, 235, 0.3);
+  --btn-shadow-active: 0 2px 6px rgba(30, 64, 175, 0.3);
+  --btn-disabled: #d1d5db;
+
+  --btn-primary-bg: linear-gradient(to right, var(--primary), #1d4ed8);
+  --btn-primary-color: #fff;
+
+  --btn-clear-bg: #eff6ff;
+  --btn-clear-color: var(--primary);
+  --btn-clear-hover-bg: #dbeafe;
+  --btn-clear-hover-color: var(--primary-dark);
+
+  --btn-secondary-bg: var(--accent-light);
+  --btn-secondary-color: var(--accent-text);
+  --btn-secondary-hover-bg: var(--accent-medium);
+  --btn-secondary-hover-color: var(--accent-hover-text);
+}
+
+/* 🌍 전역 설정 */
+body {
+  font: var(--font-body);
+  color: var(--text-main);
+  background: var(--bg-main);
+  padding: 40px 20px;
+  margin: 0;
+}
+
+h1 {
+  font: var(--font-heading);
+  color: var(--text-heading);
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+label {
+  font: var(--font-label);
+  color: var(--text-sub);
+  margin-bottom: 8px;
+}
+
+textarea, select {
+  font: var(--font-body);
+  line-height: 1.5;
+}
+
+/* ================================
+   📦 레이아웃 / 컨테이너
+================================ */
+.container {
+  max-width: 700px;
+  min-width: 360px;
+  margin: auto;
+  padding: 30px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ================================
+    💳 카드
+================================ */
+.card {
+  padding: 24px;
+  margin-top: 24px;
+  border-radius: 12px;
+  border: 1px solid var(--border-light);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-sm);
+}
+
+#charCount {
+  text-align: right;
+  font-size: 0.9em;
+  color: var(--text-faded);
+  margin-top: 4px;
+}
+
+/* ================================
+    📝 폼 요소 (textarea / select)
+================================ */
+textarea {
+  width: 100%;
+  font-size: 16px;
+  padding: 10px;
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  box-sizing: border-box;
+  resize: none;
+  overflow: hidden;
+  min-height: 80px;
+  line-height: 1.5;
+  color: var(--text-main);
+  background: var(--white);
+}
+
+select {
+  width: 100%;
+  font-size: 16px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+  cursor: pointer;
+  min-height: 60px;
+  background: var(--white);
+}
+
+/* ================================
+    🔘 버튼
+================================ */
+button {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-color);
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: var(--btn-shadow);
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--btn-shadow-hover);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: var(--btn-shadow-active);
+}
+
+button:disabled {
+  background: var(--btn-disabled);
+  color: #fff;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* ================================
+    🧭 검색창
+================================ */
+.search-box {
+  position: relative;
+  width: 100%;
+  background: var(--bg-light);
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 10px 12px 10px 40px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border-light);
+  background: var(--bg-light);
+}
+
+.search-box input:focus {
+  border-color: var(--audio-blue);
+  outline: none;
+  background-color: var(--white);
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 18px;
+  pointer-events: none;
+  font-weight: bold;
+  opacity: 0.8;
+}
+
+/* ================================
+   🗣️ 음성 선택 정보
+================================ */
+.voice-selection-card {
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.voice-selection-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.voice-info-display {
+  font: var(--font-subheading);
+  color: var(--text-heading);
+  flex: 1;
+  min-width: 180px;
+}
+
+#openVoicePickerBtn {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ================================
+   🧩 모달 (Voice Picker)
+================================ */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  position: relative;
+  min-width: 760px;
+  max-width: 800px;
+  background: var(--bg-modal);
+  border: 1px solid var(--border-light);
+  border-radius: 16px;
+  padding: 32px 24px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-content h2 {
+  font: var(--font-heading);
+  color: var(--text-heading);
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.modal-content::-webkit-scrollbar {
+  width: 10px;
+}
+.modal-content::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 10px;
+}
+.modal-content::-webkit-scrollbar-thumb {
+  background: #bbb;
+  border-radius: 10px;
+  border: 2px solid #f0f0f0;
+}
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+
+/* ❌ 모달 닫기 버튼 */
+.close-btn {
+  all: unset;
+  font-size: 22px;
+  color: var(--text-muted);
+  cursor: pointer;
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  padding: 4px;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.close-btn:hover {
+  color: var(--danger);
+  transform: scale(1.15);
+  outline: none;
+}
+
+/* ================================
+   🧃 필터 드롭다운 & 체크박스
+================================ */
+.filter-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.filter-group {
+  flex: 1;
+  min-width: 150px;
+  position: relative;
+  padding: 0;
+}
+
+.filter-toggle {
+  background: var(--bg-light);
+  border: 1px solid var(--border-dark);
+  color: var(--gray-800);
+  width: 100%;
+  text-align: left;
+  font-weight: 500;
+  font-size: 15px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  box-shadow: var(--shadow-xs);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-toggle:hover {
+  background: var(--bg-hover);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.checkbox-list {
+  font: var(--font-body);
+  color: var(--text-main);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 180px;
+  overflow-y: auto;
+  background: var(--bg-card);
+  border-radius: 10px;
+  border: 1px solid var(--border-light);
+  padding: 10px;
+  z-index: 100;
+  display: none;
+  box-shadow: var(--shadow-md);
+}
+
+.checkbox-list label {
+  font: var(--font-body);
+  color: var(--text-main);
+  display: block;
+  margin-bottom: 6px;
+  cursor: pointer;
+}
+
+.filter-group.open .checkbox-list {
+  display: block;
+}
+
+/* ================================
+   🧼 선택된 필터 요약
+================================ */
+.active-filters {
+  flex: 1;
+  font-size: 0.95em;
+  color: #444;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  min-height: 16px; 
+}
+
+.filter-group-summary {
+  margin-bottom: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: center;
+  gap: 5px 2px;
+}
+
+.filter-chip-group-title {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: 13px;
+  margin-right: 6px;
+}
+
+.filter-chip {
+  font: var(--font-chip);
+  background: var(--gray-100);
+  color: var(--text-sub);
+  padding: 6px 10px;
+  border-radius: 20px;
+  display: inline-flex; 
+  align-items: center;
+  gap: 6px;
+  line-height: 1;
+}
+
+.filter-chip-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-chip .remove-chip {
+  all: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--text-faded);
+  font-weight: bold;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.filter-chip .remove-chip:hover {
+  color: var(--danger);
+}
+
+/* ================================
+   필터 정리 버튼
+================================ */
+.filter-summary-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-light);
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  padding: 10px 20px;
+  margin-bottom: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+  min-height: 20px;
+}
+
+.clear-btn {
+  background: var(--btn-clear-bg);
+  color: var(--btn-clear-color);
+  border: 1px solid var(--border-dark);
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.clear-btn:hover {
+  background: var(--btn-clear-hover-bg);
+  color: var(--btn-clear-hover-color);
+  transform: translateY(-1px);
+}
+
+.clear-btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* ================================
+   🗂️ 음성 카드 목록
+================================ */
+.voiceCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  padding: 20px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+.voiceCard:hover {
+  transform: translateY(-2px) scale(1.015);
+  box-shadow: var(--shadow-lg);
+}
+
+.voice-card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.voice-info {
+  flex: 1;
+  min-width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.voice-info strong {
+  font: var(--font-subheading);
+  color: var(--text-strong);
+}
+
+.voice-info p {
+  font: var(--font-meta);
+  color: var(--text-sub);
+  margin: 0;
+}
+
+.style-badges {
+  margin-top: 6px;
+}
+
+.style-badges .badge {
+  font: var(--font-chip);
+  color: var(--accent-text);
+  background: var(--accent-light);
+  border: 1px solid var(--accent-medium);
+  padding: 5px 10px;
+  border-radius: 999px;
+  margin-right: 6px;
+  margin-bottom: 6px;
+  display: inline-block;
+  transition: background 0.2s ease;
+}
+
+.style-badges .badge:hover {
+  background: var(--accent-medium);
+}
+
+.voice-action {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.voice-action button {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-color);
+  border: 1px solid var(--accent-medium);
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: none;
+}
+
+.voice-action button:hover {
+  background: var(--btn-secondary-hover-bg);
+  color: var(--btn-secondary-hover-color);
+}
+
+/* ================================
+   🎧 오디오 컨트롤러
+================================ */
+#resultSection {
+  margin-top: 32px;
+  padding: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+}
+
+#customPlayer {
+  border-radius: 10px;
+  padding: 16px;
+  background: var(--bg-card);
+  transition: background 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: var(--shadow-xs);
+}
+
+#customPlayer:hover {
+  background: var(--bg-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.player-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.progress-container {
+  position: relative;
+  padding-right: 7px;
+  width: 100%;
+}
+
+#progressBar {
+  --progress: 0%;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  cursor: pointer;
+  background: linear-gradient(to right, var(--primary) 0%, var(--primary) var(--progress), var(--gray-200) var(--progress));
+  padding: 0;
+}
+
+#progressBar::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  background: var(--audio-blue);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#progressBar::-webkit-slider-runnable-track {
+  background: transparent;
+  margin-left: -7px;
+  margin-right: -7px;
+}
+
+.progress-tooltip {
+  position: absolute;
+  top: -26px;
+  background-color: #333;
+  color: var(--white);
+  font-size: 12px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.player-bottom-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.player-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.player-button {
+  background: transparent;
+  color: var(--primary-dark);
+  padding: 6px;
+  border: none;
+  font-size: 20px;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.time-label {
+  font: var(--font-meta);
+  color: var(--text-muted);
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font: var(--font-body);
+  color: var(--text-main);
+  justify-content: space-between;
+  width: 100%;
+}
+
+#volumeIcon {
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  font-size: 24px;
+  line-height: 24px;
+}
+
+#volumeSlider {
+  width: 70px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+/* ================================
+   ⬇ 다운로드 버튼
+================================ */
+.download-link {
+  font: var(--font-button);
+  background: var(--primary);
+  color: var(--white);
+  display: inline-block;
+  margin-top: 12px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.download-link:hover {
+  background: var(--primary-dark);
+}
+
+/* ================================
+   🔄 로딩 스피너
+================================ */
+.loading-spinner {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border: 3px solid #fff;
+  border-top: 3px solid var(--audio-blue);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ================================
+   🔽 셀렉트 박스 (스타일)
+================================ */
+.styled-select {
+  background: #f5f8fa;
+  border: 1.5px solid #b0c4de;
+  border-radius: 8px;
+  font-size: 16px;
+  padding: 0 12px;
+  color: var(--text-main);
+  transition: border 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  appearance: none;
+  width: 200px;
+  height: 44px !important;
+  line-height: 44px !important;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23666" height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7.293 8.293a1 1 0 011.414 0L10 9.586l1.293-1.293a1 1 0 111.414 1.414l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 010-1.414z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 20px 20px;
+}
+
+.styled-select:focus {
+  border-color: #000;
+  outline: none;
+  box-shadow: 0 0 0 2px #cce4ff;
+}
+
+#output_format {
+  margin-right: 8px;
+}
+
+/* ================================
+   📱 반응형 레이아웃
+================================ */
+@media (max-width: 480px) {
+  .player-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .volume-control {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  #volumeSlider {
+    width: 100%;
+  }
+}
+  
