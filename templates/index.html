@@ -48,47 +48,44 @@
     </div>
 
     <div class="format-convert-row" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: flex-end; margin-top: 32px;">
-      <select id="output_format" class="styled-select">
-        <option value="MP3">MP3 (Compressed)</option>
-        <option value="WAV">WAV (Uncompressed)</option>
-        <option value="FLAC">FLAC (Lossless)</option>
-        <option value="ALAW">ALAW (Phone-quality, 8kHz)</option>
-        <option value="ULAW">ULAW (Phone-quality, 8kHz)</option>
-      </select>
+      <div class="styled-select custom-select">
+        <button class="filter-toggle" id="outputFormatBtn" type="button">
+          <span class="filter-label">WAV (Uncompressed)</span>
+          <span class="filter-arrow">▼</span>
+        </button>
+        <div class="checkbox-list select-list" id="outputFormatList" style="display: none;">
+          <div class="select-option" data-value="MP3">MP3 (Compressed)</div>
+          <div class="select-option" data-value="WAV">WAV (Uncompressed)</div>
+          <div class="select-option" data-value="FLAC">FLAC (Lossless)</div>
+          <div class="select-option" data-value="ALAW">ALAW (Phone-quality, 8kHz)</div>
+          <div class="select-option" data-value="ULAW">ULAW (Phone-quality, 8kHz)</div>
+        </div>
+      </div>
+      <input type="hidden" name="output_format" id="output_format" value="WAV">
       <button id="convertBtn">Convert</button>
     </div>
     <p id="status"></p>
 
-    <!-- 🎧 결과 카드 -->
-    <div class="card" id="resultSection" style="display: none;">
-      
-    <!-- <div class="card" id="resultSection" style="display: none;"> -->
-      <div id="audioControls">
-        <div id="customPlayer">
-          <div class="player-row">
-            <!-- ▶ 재생 버튼 -->
-            <button id="playBtn" class="player-button"><i class="fas fa-play"></i></button>
-
-            <!-- ⏱ 현재시간 / 전체시간 -->
-            <span id="timeDisplay" class="time-label">0:00 / 0:00</span>
-
-            <!-- 🔊 프로그레스바 -->
-            <div style="position: relative; flex: 1; display: flex; align-items: center; gap: 12px;">
-              <input id="progressBar" type="range" min="0" max="100" value="0">
-              <!-- 🟡 툴팁 -->
-              <div id="tooltipTime" class="progress-tooltip" style="display: none;">0:00</div>
-              <div class="volume-control" style="display: flex; align-items: center; gap: 6px; margin-left: 12px;">
-                <span id="volumeIcon" style="font-size: 20px; cursor: pointer;">🔊</span>
-                <input id="volumeSlider" type="range" min="0" max="1" step="0.01" value="1" style="width: 70px;">
-              </div>
-            </div>
+    <!-- �� 결과 카드 -->
+    <div class="card" id="customPlayer">
+      <div class="player-row">
+        <button id="playBtn" class="player-button"><i class="fas fa-play"></i></button>
+        <span id="timeDisplay" class="time-label">0:00 / 0:00</span>
+        <div class="progress-container">
+          <input id="progressBar" type="range" min="0" max="100" value="0">
+          <div id="tooltipTime" class="progress-tooltip" style="display: none;">0:00</div>
+          <div class="volume-control">
+            <button id="volumeIcon" type="button" class="player-volume-btn">
+              <i class="fas fa-volume-up"></i>
+            </button>
+            <input id="volumeSlider" type="range" min="0" max="1" step="0.01" value="1">
           </div>
         </div>
       </div>
-    </div>
-    <a id="downloadBtn" download class="download-link" style="display: none;">Download</a>
+      <a id="downloadBtn" download class="download-link" style="display: none;">Download</a>
       <audio id="audioPlayer" style="display: none;"></audio>
       <a id="downloadLink" style="display: none;" download></a>
+    </div>
   </div>
 
   <!-- 📋 음성 선택 패널 (숨김 기본) -->
@@ -107,23 +104,38 @@
       <!-- ✅ 체크박스 기반 필터 -->
       <div class="filter-row">
         <div class="filter-group collapsible" id="groupLocale">
-          <button class="filter-toggle">Locale ▼</button>
+          <button class="filter-toggle">
+            <span class="filter-label">Locale</span>
+            <span class="filter-arrow">▼</span>
+          </button>
           <div class="checkbox-list"></div>
         </div>
         <div class="filter-group collapsible" id="groupAccent">
-          <button class="filter-toggle">Accent ▼</button>
+          <button class="filter-toggle">
+            <span class="filter-label">Accent</span>
+            <span class="filter-arrow">▼</span>
+          </button>
           <div class="checkbox-list"></div>
         </div>
         <div class="filter-group collapsible" id="groupGender">
-          <button class="filter-toggle">Gender ▼</button>
+          <button class="filter-toggle">
+            <span class="filter-label">Gender</span>
+            <span class="filter-arrow">▼</span>
+          </button>
           <div class="checkbox-list"></div>
         </div>
         <div class="filter-group collapsible" id="groupStyle">
-          <button class="filter-toggle">Style ▼</button>
+          <button class="filter-toggle">
+            <span class="filter-label">Style</span>
+            <span class="filter-arrow">▼</span>
+          </button>
           <div class="checkbox-list"></div>
         </div>
         <div class="filter-group collapsible" id="groupAge">
-          <button class="filter-toggle">Age ▼</button>
+          <button class="filter-toggle">
+            <span class="filter-label">Age</span>
+            <span class="filter-arrow">▼</span>
+          </button>
           <div class="checkbox-list"  ></div>
         </div>
       </div>

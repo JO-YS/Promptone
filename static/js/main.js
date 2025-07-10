@@ -327,7 +327,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Hide download button before conversion
     downloadBtn.style.display = "none";
-    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    playBtn.innerHTML = '<i class="fas fa-play"></i>';
 
     convertBtn.disabled = true;
     convertBtn.innerHTML = `<span class="loading-spinner"></span> Converting...`;
@@ -399,11 +399,11 @@ document.addEventListener("DOMContentLoaded", () => {
   audioPlayer.addEventListener("ended", () => {
     progressBar.value = audioPlayer.duration;
     currentTimeEl.textContent = formatTime(audioPlayer.duration);
-    playBtn.innerHTML = '<i class="fas fa-pause"></i>'; // 재생 중
+    playBtn.innerHTML = '<i class="fas fa-play"></i>'; // 재생 중
   });
 
   audioPlayer.addEventListener("pause", () => {
-    playBtn.innerHTML = '<i class="fas fa-pause"></i>'; // 재생 중
+    playBtn.innerHTML = '<i class="fas fa-play"></i>'; // 재생 중
   });
 
   progressBar.addEventListener("input", () => {
@@ -414,10 +414,10 @@ document.addEventListener("DOMContentLoaded", () => {
   playBtn.addEventListener("click", () => {
     if (audioPlayer.paused) {
       audioPlayer.play();
-      playBtn.innerHTML = '<i class="fas fa-play"></i>';  // 정지 상태
+      playBtn.innerHTML = '<i class="fas fa-pause"></i>';  // 정지 상태
     } else {
       audioPlayer.pause();
-      playBtn.innerHTML = '<i class="fas fa-pause"></i>'; // 재생 중
+      playBtn.innerHTML = '<i class="fas fa-play"></i>'; // 재생 중
     }
   });
 
@@ -496,11 +496,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // 볼륨 아이콘 상태 업데이트
   function updateVolumeIcon() {
     if (audioPlayer.muted || audioPlayer.volume == 0) {
-      volumeIcon.textContent = "🔇";
+      volumeIcon.innerHTML = '<i class="fas fa-volume-mute"></i>';
     } else if (audioPlayer.volume < 0.5) {
-      volumeIcon.textContent = "🔉";
+      volumeIcon.innerHTML = '<i class="fas fa-volume-down"></i>';
     } else {
-      volumeIcon.textContent = "🔊";
+      volumeIcon.innerHTML = '<i class="fas fa-volume-up"></i>';
     }
   }
 
@@ -515,5 +515,35 @@ document.addEventListener("DOMContentLoaded", () => {
   // 초기 볼륨 설정
   audioPlayer.volume = 1;
   updateVolumeIcon();
+  
+  // Output format custom select logic
+  const btn = document.getElementById('outputFormatBtn');
+  const list = document.getElementById('outputFormatList');
+  const hiddenInput = document.getElementById('output_format');
+
+  if (btn && list && hiddenInput) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      list.style.display = (list.style.display === 'block') ? 'none' : 'block';
+    });
+    document.querySelectorAll('.select-option').forEach(option => {
+      option.addEventListener('click', function() {
+        document.querySelectorAll('.select-option').forEach(o => o.classList.remove('selected'));
+        this.classList.add('selected');
+        btn.querySelector('.filter-label').textContent = this.textContent;
+        hiddenInput.value = this.dataset.value;
+        list.style.display = 'none';
+      });
+    });
+    document.addEventListener('click', function() {
+      list.style.display = 'none';
+    });
+    // Set default selected
+    document.querySelectorAll('.select-option').forEach(option => {
+      if(option.dataset.value === hiddenInput.value) {
+        option.classList.add('selected');
+      }
+    });
+  }
   
 });
