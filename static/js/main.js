@@ -14,8 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const downloadBtn = document.getElementById("downloadBtn");
   const playBtn = document.getElementById("playBtn");
   const progressBar = document.getElementById("progressBar");
-  const currentTimeEl = document.getElementById("currentTime");
-  const durationEl = document.getElementById("duration");
+  const timeDisplay = document.getElementById("timeDisplay");
   const textArea = document.getElementById("text");
   const promptArea = document.getElementById("prompt");
   const charCount = document.getElementById("charCount");
@@ -291,7 +290,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    document.getElementById("resultSection").style.display = "block";
+    document.getElementById("customPlayer").style.display = "block";
   }
 
   function formatTime(seconds) {
@@ -311,7 +310,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
     progressBar.value = audioPlayer.currentTime;
     progressBar.style.setProperty('--progress', `${percent}%`);
-    currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+    timeDisplay.textContent = `${formatTime(audioPlayer.currentTime)} / ${formatTime(audioPlayer.duration)}`;
   }
   
 
@@ -390,7 +389,7 @@ document.addEventListener("DOMContentLoaded", () => {
   audioPlayer.addEventListener("loadedmetadata", () => {
     progressBar.max = audioPlayer.duration;
     progressBar.step = 0.01;
-    durationEl.textContent = formatTime(audioPlayer.duration);
+    timeDisplay.textContent = `0:00 / ${formatTime(audioPlayer.duration)}`;
     updateProgressBar();
   });
 
@@ -398,7 +397,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   audioPlayer.addEventListener("ended", () => {
     progressBar.value = audioPlayer.duration;
-    currentTimeEl.textContent = formatTime(audioPlayer.duration);
+    timeDisplay.textContent = `${formatTime(audioPlayer.duration)} / ${formatTime(audioPlayer.duration)}`;
     playBtn.innerHTML = '<i class="fas fa-play"></i>'; // 재생 중
   });
 
@@ -409,6 +408,23 @@ document.addEventListener("DOMContentLoaded", () => {
   progressBar.addEventListener("input", () => {
     audioPlayer.currentTime = progressBar.value;
     updateProgressBar(); 
+  });
+
+  // Progress bar hover tooltip
+  progressBar.addEventListener("mousemove", (e) => {
+    if (!audioPlayer.duration || isNaN(audioPlayer.duration)) return;
+    
+    const rect = progressBar.getBoundingClientRect();
+    const percent = (e.clientX - rect.left) / rect.width;
+    const time = percent * audioPlayer.duration;
+    
+    tooltip.textContent = formatTime(time);
+    tooltip.style.left = `${percent * 100}%`;
+    tooltip.style.display = "block";
+  });
+
+  progressBar.addEventListener("mouseleave", () => {
+    tooltip.style.display = "none";
   });
 
   playBtn.addEventListener("click", () => {
@@ -524,7 +540,42 @@ document.addEventListener("DOMContentLoaded", () => {
   if (btn && list && hiddenInput) {
     btn.addEventListener('click', function(e) {
       e.stopPropagation();
-      list.style.display = (list.style.display === 'block') ? 'none' : 'block';
+      
+      if (list.style.display === 'block') {
+        list.style.display = 'none';
+        list.classList.remove('dropup');
+        list.style.width = ''; // 폭 초기화
+      } else {
+        // 화면 공간 확인하여 드롭다운 방향 결정
+        const btnRect = btn.getBoundingClientRect();
+        const listHeight = 280; // max-height와 동일
+        const spaceBelow = window.innerHeight - btnRect.bottom;
+        const spaceAbove = btnRect.top;
+        
+        // 아래쪽 공간이 부족하고 위쪽 공간이 충분하면 위로 열기
+        if (spaceBelow < listHeight && spaceAbove > listHeight) {
+          list.classList.add('dropup');
+        } else {
+          list.classList.remove('dropup');
+        }
+        
+        // 드롭다운 폭을 컨텐츠에 맞게 조정
+        list.style.display = 'block';
+        const options = list.querySelectorAll('.select-option');
+        let maxWidth = 0;
+        
+        options.forEach(option => {
+          const optionWidth = option.scrollWidth;
+          maxWidth = Math.max(maxWidth, optionWidth);
+        });
+        
+        // 패딩과 여백을 고려하여 폭 설정
+        const totalWidth = maxWidth + 32; // 좌우 패딩 16px씩
+        const minWidth = 120; // 최소 폭
+        const maxWidthLimit = 300; // 최대 폭 제한
+        
+        list.style.width = Math.max(minWidth, Math.min(totalWidth, maxWidthLimit)) + 'px';
+      }
     });
     document.querySelectorAll('.select-option').forEach(option => {
       option.addEventListener('click', function() {
@@ -533,10 +584,14 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.querySelector('.filter-label').textContent = this.textContent;
         hiddenInput.value = this.dataset.value;
         list.style.display = 'none';
+        list.classList.remove('dropup');
+        list.style.width = ''; // 폭 초기화
       });
     });
     document.addEventListener('click', function() {
       list.style.display = 'none';
+      list.classList.remove('dropup');
+      list.style.width = ''; // 폭 초기화
     });
     // Set default selected
     document.querySelectorAll('.select-option').forEach(option => {

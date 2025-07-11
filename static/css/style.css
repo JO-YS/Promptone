@@ -185,6 +185,7 @@
     cursor: pointer;
     transition: all 0.2s ease-in-out;
     box-shadow: var(--btn-shadow);
+    box-sizing: border-box;
   }
 
   button:hover {
@@ -402,8 +403,8 @@
     position: absolute;
     top: 100%;
     left: 0;
-    width: fit-content;      
-    min-width: 180px;       
+    width: max-content;      
+    min-width: 120px;       
     max-height: 280px;
     overflow-y: auto;
     background: var(--bg-card);
@@ -413,6 +414,12 @@
     z-index: 100;
     display: none;
     box-shadow: var(--shadow-md);
+  }
+
+  .checkbox-list.dropup {
+    top: auto;
+    bottom: 100%;
+    margin-bottom: 4px;
   }
 
   .checkbox-list label {
@@ -629,13 +636,15 @@
     background: var(--btn-secondary-bg);
     color: var(--btn-secondary-color);
     border: 1px solid var(--accent-medium);
-    padding: 8px 16px;
-    border-radius: 999px;
+    padding: 12px 24px;
+    height: 45px;
+    border-radius: 8px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
     box-shadow: none;
+    box-sizing: border-box;
   }
 
   .voice-action button:hover {
@@ -646,15 +655,6 @@
   /* ================================
     🎧 오디오 컨트롤러
   ================================ */
-  #resultSection {
-    margin-top: 32px;
-    padding: 24px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-light);
-    border-radius: 12px;
-    box-shadow: var(--shadow-sm);
-  }
-
   #customPlayer {
     border-radius: 10px;
     padding: 16px;
@@ -669,19 +669,29 @@
     gap: 12px;
   }
 
-  .progress-container {
+  .player-controls-row {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 12px;
+    margin-top: 8px;
+  }
+
+  .time-label {
+    font: var(--font-meta);
+    color: var(--text-muted);
+    min-width: fit-content;
+    margin-left: 44px; /* 플레이버튼 너비(36px) + gap(8px) */
+  }
+
+  .progress-wrapper {
     flex: 1;
     min-width: 0;
     position: relative;
   }
 
   #progressBar {
-    flex: 1;
-    min-width: 0;
-    max-width: 100%;
+    width: 100%;
     appearance: none;
     height: 6px;
     border-radius: 3px;
@@ -774,35 +784,84 @@
     border: none;
   }
 
-  #volumeIcon:hover, #volumeIcon:focus {
-    outline: none;
-  }
-
   #volumeSlider {
     width: 70px;
-    accent-color: var(--primary);
+    height: 6px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background: var(--gray-200);
+    border-radius: 3px;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  #volumeSlider:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  #volumeSlider::-webkit-slider-track {
+    background: transparent;
+    border: none;
+  }
+
+  #volumeSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    border: none;
+    background: var(--primary);
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
     cursor: pointer;
   }
+
+  #volumeSlider::-moz-range-track {
+    background: transparent;
+    border: none;
+  }
+
+  #volumeSlider::-moz-range-thumb {
+    border: none;
+    background: var(--primary);
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+
+  
 
   /* ================================
     ⬇ 다운로드 버튼
   ================================ */
   .download-link {
     font: var(--font-button);
-    background: var(--primary);
-    color: var(--white);
-    display: inline-block;
+    font-weight: 600;
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-top: 12px;
-    padding: 10px 16px;
+    margin-left: auto;
+    width: fit-content;
+    height: 45px;
+    border: none;
+    padding: 12px 24px;
     border-radius: 8px;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--btn-shadow);
     text-decoration: none;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: all 0.2s ease-in-out;
+    box-sizing: border-box;
   }
+
 
   .download-link:hover {
     background: var(--primary-dark);
+    transform: translateY(-2px);
   }
 
   /* ================================
@@ -829,6 +888,10 @@
   /* ================================
     🔽 셀렉트 박스 (스타일)
   ================================ */
+  
+  .styled-select {
+    position: relative;
+  }
 
   .select-option {
     padding: 8px 16px;
@@ -844,30 +907,30 @@
     color: var(--primary-dark);
   }
 
-  #output_format {
-    margin-right: 8px;
-  }
-
   /* ================================
     📱 반응형 레이아웃
   ================================ */
   @media (max-width: 480px) {
     .player-row {
-      flex-direction: column;
-      align-items: stretch;
+      flex-direction: row;
+      align-items: center;
       gap: 8px;
     }
-    .progress-container {
-      width: 100%;
+    
+    .player-controls-row {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
     }
 
     .volume-control {
-      justify-content: space-between;
-      width: 100%;
+      justify-content: flex-end;
+      gap: 8px;
     }
 
     #volumeSlider {
-      width: 100%;
+      width: 60px;
     }
   }
 
