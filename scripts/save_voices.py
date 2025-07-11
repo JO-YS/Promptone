@@ -1,7 +1,6 @@
 # scripts/save_voices.py
 import os
 import sys
-import json
 import requests
 from dotenv import load_dotenv
 
@@ -9,8 +8,15 @@ from dotenv import load_dotenv
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from models import VoiceLocale, init_db
 
+def normalize_style(style):
+    # "newscast" (대소문자 무시) → "Newscast"로 통일
+    if style.lower() == "newscast":
+        return "Newscast"
+    return style
+
 def save_voices_to_db(voice_data: list):
     session = init_db()
+    seen = set()  # (voiceId, locale) 중복 방지
 
     for item in voice_data:
         voice_id = item.get("voiceId")
@@ -21,15 +27,23 @@ def save_voices_to_db(voice_data: list):
         supported_locales = item.get("supportedLocales", {})
 
         for locale, locale_info in supported_locales.items():
+            key = (voice_id, locale)
+            if key in seen:
+                continue  # 이미 처리한 조합은 건너뜀
+            seen.add(key)
+
+            styles = locale_info.get('availableStyles', [])
+            unique_styles = list(set([normalize_style(s) for s in styles]))
+
             voice = VoiceLocale(
                 voiceId=voice_id,
-                locale=locale,  # ex: "fr-FR"
-                displayName = displayName,
+                locale=locale,
+                displayName=displayName,
                 displayLanguage=locale_info.get("detail", ""),
                 accent=accent,
                 gender=gender,
                 description=description,
-                availableStyles=locale_info.get('availableStyles', []),
+                availableStyles=unique_styles,
                 rawdata=item
             )
             session.merge(voice)
