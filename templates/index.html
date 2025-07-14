@@ -1,159 +1,333 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>AI Voice Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="PromptOne - AI Voice Generator - Convert text to natural-sounding speech with customizable voices">
+  <meta name="keywords" content="AI, voice, text-to-speech, TTS, voice generator, PromptOne">
+  <meta name="author" content="PromptOne">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="PromptOne - AI Voice Generator">
+  <meta property="og:description" content="Convert text to natural-sounding speech with customizable voices">
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="PromptOne - AI Voice Generator">
+  <meta property="twitter:description" content="Convert text to natural-sounding speech with customizable voices">
+  
+  <title>PromptOne - AI Voice Generator - Text to Speech Converter</title>
+  
+  <!-- Preload critical resources -->
+  <link rel="preload" href="{{ url_for('static', filename='css/style.css') }}" as="style">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style">
+  
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  
   <script defer src="{{ url_for('static', filename='js/main.js') }}"></script>
 </head>
-<template id="voiceCardTemplate">
-  <div class="voiceCard">
-    <div class="voice-info">
-      <strong class="displayName">Display Name</strong>
-      <p class="displayLanguage">Language (Locale)</p>
-      <p class="genderAccent">Gender / Accent</p>
-      <div class="style-badges"></div>
-    </div>
-    <div class="voice-action">
-      <button class="selectVoiceBtn">Use this voice</button>
-    </div>
-  </div>
-</template>
+
 <body>
-  <div class="container">
-    <h1>AI Voice Generator</h1>
+  <main class="container">
+    <h1>PromptOne - AI Voice Generator</h1>
 
     <!-- 🎤 선택된 음성 & 버튼 카드 -->
-    <div class="card voice-selection-card">
+    <section class="card voice-selection-card" aria-labelledby="voice-selection-title">
+      <h2 id="voice-selection-title" class="visually-hidden">Voice Selection</h2>
       <div class="voice-selection-row">
-        <div id="selectedVoiceInfo" class="voice-info-display">
+        <div id="selectedVoiceInfo" class="voice-info-display" role="status" aria-live="polite">
           No voice selected
         </div>
-        <button id="openVoicePickerBtn">Select Voice</button>
+        <button id="openVoicePickerBtn" aria-haspopup="dialog" aria-expanded="false">
+          <i class="fas fa-microphone" aria-hidden="true"></i>
+          Select Voice
+        </button>
       </div>
-    </div>
+    </section>
 
     <!-- 🎛️ 설정 카드 -->
-    <div class="card">
-      <label for="prompt">Prompt (how should it sound?)</label>
-      <textarea id="prompt" rows="2" placeholder="예: Speak gently and cheerfully like a friendly assistant."></textarea>
-    </div>
+    <section class="card" aria-labelledby="prompt-label">
+      <label id="prompt-label" for="prompt">Prompt (how should it sound?)</label>
+      <textarea 
+        id="prompt" 
+        name="prompt"
+        rows="2" 
+        placeholder="예: Speak gently and cheerfully like a friendly assistant."
+      ></textarea>
+    </section>
 
     <!-- 📝 입력 카드 -->
-    <div class="card">
-      <label for="text">Text</label>
-      <textarea id="text" rows="2" placeholder="예: Hello! Welcome to our service. How can I help you today?" maxlength="3000"></textarea>
-      <div id="charCount">0 / 3000</div>
-    </div>
+    <section class="card" aria-labelledby="text-label">
+      <label id="text-label" for="text">Text to Convert</label>
+      <textarea 
+        id="text" 
+        name="text"
+        rows="2" 
+        placeholder="예: Hello! Welcome to our service. How can I help you today?" 
+        maxlength="3000"
+        aria-describedby="charCount"
+        required
+      ></textarea>
+      <div id="charCount" class="char-count" aria-live="polite">0 / 3000</div>
+    </section>
 
-    <div class="format-convert-row" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: flex-end; margin-top: 32px;">
-      <div class="styled-select custom-select">
-        <button class="filter-toggle" id="outputFormatBtn" type="button">
-          <span class="filter-label">MP3 (Compressed)</span>
-          <span class="filter-arrow">▼</span>
-        </button>
-        <div class="checkbox-list select-list" id="outputFormatList" style="display: none;">
-          <div class="select-option" data-value="MP3">MP3 (Compressed)</div>
-          <div class="select-option" data-value="WAV">WAV (Uncompressed)</div>
-          <div class="select-option" data-value="FLAC">FLAC (Lossless)</div>
-          <div class="select-option" data-value="ALAW">ALAW (Phone-quality, 8kHz)</div>
-          <div class="select-option" data-value="ULAW">ULAW (Phone-quality, 8kHz)</div>
+    <!-- 🎛️ 포맷 선택 및 변환 -->
+    <section class="format-convert-section" aria-labelledby="format-label">
+      <div class="format-convert-row">
+        <div class="format-selector">
+          <div class="styled-select custom-select">
+                          <button 
+                class="filter-toggle" 
+                id="outputFormatBtn" 
+                type="button"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+              >
+              <span class="filter-label">MP3 (Compressed)</span>
+              <span class="filter-arrow" aria-hidden="true">▼</span>
+            </button>
+            <div 
+              class="checkbox-list select-list" 
+              id="outputFormatList" 
+              role="listbox"
+              style="display: none;"
+            >
+              <div class="select-option" data-value="MP3" role="option" aria-selected="true">MP3 (Compressed)</div>
+              <div class="select-option" data-value="WAV" role="option" aria-selected="false">WAV (Uncompressed)</div>
+              <div class="select-option" data-value="FLAC" role="option" aria-selected="false">FLAC (Lossless)</div>
+              <div class="select-option" data-value="ALAW" role="option" aria-selected="false">ALAW (Phone-quality, 8kHz)</div>
+              <div class="select-option" data-value="ULAW" role="option" aria-selected="false">ULAW (Phone-quality, 8kHz)</div>
+            </div>
+          </div>
         </div>
+        <input type="hidden" name="output_format" id="output_format" value="MP3">
+        <button 
+          id="convertBtn" 
+          type="button"
+        >
+          <i class="fas fa-magic" aria-hidden="true"></i>
+          Convert
+        </button>
       </div>
-      <input type="hidden" name="output_format" id="output_format" value="MP3">
-      <button id="convertBtn">Convert</button>
-    </div>
-    <p id="status"></p>
+    </section>
+
+    <!-- 📊 상태 표시 -->
+    <div id="status" class="status-message" role="status" aria-live="polite"></div>
 
     <!-- 🎵 결과 카드 -->
-    <div class="card" id="customPlayer" style="display: none;">
+    <section class="card audio-player-section" id="customPlayer" style="display: none;" aria-labelledby="audio-player-title">
+      <h2 id="audio-player-title" class="visually-hidden">Audio Player</h2>
       <div class="player-row">
-        <button id="playBtn" class="player-button"><i class="fas fa-play"></i></button>
+        <button 
+          id="playBtn" 
+          class="player-button"
+          aria-label="Play audio"
+          aria-pressed="false"
+        >
+          <i class="fas fa-play" aria-hidden="true"></i>
+        </button>
         <div class="progress-wrapper">
-          <input id="progressBar" type="range" min="0" max="100" value="0">
-          <div id="tooltipTime" class="progress-tooltip" style="display: none;">0:00</div>
+          <label for="progressBar" class="visually-hidden">Audio progress</label>
+          <input 
+            id="progressBar" 
+            type="range" 
+            min="0" 
+            max="100" 
+            value="0"
+            aria-label="Audio progress"
+            role="slider"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="0"
+          >
+          <div id="tooltipTime" class="progress-tooltip" style="display: none;" aria-hidden="true">0:00</div>
         </div>
       </div>
       <div class="player-controls-row">
-        <span id="timeDisplay" class="time-label">0:00 / 0:00</span>
+        <span id="timeDisplay" class="time-label" aria-live="polite">0:00 / 0:00</span>
         <div class="volume-control">
-          <button id="volumeIcon" type="button" class="player-volume-btn">
-            <i class="fas fa-volume-up"></i>
+          <button 
+            id="volumeIcon" 
+            type="button" 
+            class="player-volume-btn"
+            aria-label="Mute audio"
+            aria-pressed="false"
+          >
+            <i class="fas fa-volume-up" aria-hidden="true"></i>
           </button>
-          <input id="volumeSlider" type="range" min="0" max="1" step="0.01" value="1">
+          <label for="volumeSlider" class="visually-hidden">Volume</label>
+          <input 
+            id="volumeSlider" 
+            type="range" 
+            min="0" 
+            max="1" 
+            step="0.01" 
+            value="1"
+            aria-label="Volume control"
+            role="slider"
+            aria-valuemin="0"
+            aria-valuemax="1"
+            aria-valuenow="1"
+          >
         </div>
       </div>
-    </div>
-    <a id="downloadBtn" download class="download-link" style="display: none;">Download</a>
-    <audio id="audioPlayer" style="display: none;"></audio>
-    <a id="downloadLink" style="display: none;" download></a>
-  </div>
+    </section>
 
-  <!-- 📋 음성 선택 패널 (숨김 기본) -->
-  <div id="voicePickerPanel" class="modal hidden">
+    <!-- ⬇ 다운로드 버튼 -->
+    <a 
+      id="downloadBtn" 
+      download 
+      class="download-link" 
+      style="display: none;"
+      aria-label="Download audio file"
+    >
+      <i class="fas fa-download" aria-hidden="true"></i>
+      Download
+    </a>
+
+    <!-- 🎵 숨겨진 오디오 플레이어 -->
+    <audio id="audioPlayer" style="display: none;" preload="metadata"></audio>
+  </main>
+
+  <!-- 📋 음성 선택 패널 (모달) -->
+  <div 
+    id="voicePickerPanel" 
+    class="modal hidden" 
+    role="dialog" 
+    aria-modal="true"
+    aria-labelledby="voice-picker-title"
+    aria-describedby="voice-picker-description"
+  >
     <div class="modal-content">
-      <button id="closeVoicePickerBtn" class="close-btn">✖</button>
+      <button 
+        id="closeVoicePickerBtn" 
+        class="close-btn"
+        aria-label="Close voice picker"
+      >
+        <i class="fas fa-times" aria-hidden="true"></i>
+      </button>
 
-      <h2>Select a Voice</h2>
+      <h2 id="voice-picker-title">Select a Voice</h2>
+      <p id="voice-picker-description" class="visually-hidden">
+        Choose from available voices by filtering by locale, accent, gender, style, and age
+      </p>
 
+      <!-- 🔍 검색 -->
       <div class="search-box">
-        <span class="search-icon"><i class="fas fa-search"></i></span>
-        <input type="text" id="voiceSearch" placeholder="Search by name, accent, style...">
+        <label for="voiceSearch" class="visually-hidden">Search voices</label>
+        <span class="search-icon" aria-hidden="true">
+          <i class="fas fa-search"></i>
+        </span>
+        <input 
+          type="text" 
+          id="voiceSearch" 
+          placeholder="Search by name, accent, style..."
+        >
       </div>
-
 
       <!-- ✅ 체크박스 기반 필터 -->
-      <div class="filter-row">
-        <div class="filter-group collapsible" id="groupLocale">
-          <button class="filter-toggle">
-            <span class="filter-label">Locale</span>
-            <span class="filter-arrow">▼</span>
-          </button>
-          <div class="checkbox-list"></div>
+      <fieldset class="filter-section">
+        <legend class="visually-hidden">Voice filters</legend>
+        <div class="filter-row">
+          <div class="filter-group collapsible" id="groupLocale">
+            <button class="filter-toggle" aria-expanded="false" aria-controls="groupLocale-list">
+              <span class="filter-label">Locale</span>
+              <span class="filter-arrow" aria-hidden="true">▼</span>
+            </button>
+            <div id="groupLocale-list" class="checkbox-list" role="group" aria-labelledby="groupLocale-label"></div>
+          </div>
+          <div class="filter-group collapsible" id="groupAccent">
+            <button class="filter-toggle" aria-expanded="false" aria-controls="groupAccent-list">
+              <span class="filter-label">Accent</span>
+              <span class="filter-arrow" aria-hidden="true">▼</span>
+            </button>
+            <div id="groupAccent-list" class="checkbox-list" role="group" aria-labelledby="groupAccent-label"></div>
+          </div>
+          <div class="filter-group collapsible" id="groupGender">
+            <button class="filter-toggle" aria-expanded="false" aria-controls="groupGender-list">
+              <span class="filter-label">Gender</span>
+              <span class="filter-arrow" aria-hidden="true">▼</span>
+            </button>
+            <div id="groupGender-list" class="checkbox-list" role="group" aria-labelledby="groupGender-label"></div>
+          </div>
+          <div class="filter-group collapsible" id="groupStyle">
+            <button class="filter-toggle" aria-expanded="false" aria-controls="groupStyle-list">
+              <span class="filter-label">Style</span>
+              <span class="filter-arrow" aria-hidden="true">▼</span>
+            </button>
+            <div id="groupStyle-list" class="checkbox-list" role="group" aria-labelledby="groupStyle-label"></div>
+          </div>
+          <div class="filter-group collapsible" id="groupAge">
+            <button class="filter-toggle" aria-expanded="false" aria-controls="groupAge-list">
+              <span class="filter-label">Age</span>
+              <span class="filter-arrow" aria-hidden="true">▼</span>
+            </button>
+            <div id="groupAge-list" class="checkbox-list" role="group" aria-labelledby="groupAge-label"></div>
+          </div>
         </div>
-        <div class="filter-group collapsible" id="groupAccent">
-          <button class="filter-toggle">
-            <span class="filter-label">Accent</span>
-            <span class="filter-arrow">▼</span>
-          </button>
-          <div class="checkbox-list"></div>
-        </div>
-        <div class="filter-group collapsible" id="groupGender">
-          <button class="filter-toggle">
-            <span class="filter-label">Gender</span>
-            <span class="filter-arrow">▼</span>
-          </button>
-          <div class="checkbox-list"></div>
-        </div>
-        <div class="filter-group collapsible" id="groupStyle">
-          <button class="filter-toggle">
-            <span class="filter-label">Style</span>
-            <span class="filter-arrow">▼</span>
-          </button>
-          <div class="checkbox-list"></div>
-        </div>
-        <div class="filter-group collapsible" id="groupAge">
-          <button class="filter-toggle">
-            <span class="filter-label">Age</span>
-            <span class="filter-arrow">▼</span>
-          </button>
-          <div class="checkbox-list"  ></div>
-        </div>
-      </div>
-
+      </fieldset>
 
       <!-- ✅ 필터 요약 및 초기화 -->
       <div class="filter-summary-bar">
-        <div id="activeFilters" class="active-filters">No filters applied.</div>
-        <button id="clearFiltersBtn" class="clear-btn">Clear All</button>
+        <div id="activeFilters" class="active-filters" aria-live="polite">No filters applied.</div>
+        <button 
+          id="clearFiltersBtn" 
+          class="clear-btn"
+        >
+          <i class="fas fa-times" aria-hidden="true"></i>
+          Clear All
+        </button>
       </div>
 
-      <div id="voiceResults" class="voice-grid">
+      <!-- 🗂️ 음성 결과 목록 -->
+      <div id="voiceResults" class="voice-grid" role="list" aria-label="Available voices">
         <!-- JS로 카드 삽입 -->
       </div>
     </div>
   </div>
+
+  <!-- 🎭 음성 카드 템플릿 -->
+  <template id="voiceCardTemplate">
+    <div class="voiceCard" role="listitem">
+      <div class="voice-info">
+        <div class="voice-header">
+          <strong class="displayName">Display Name</strong>
+          <span class="voice-id">Voice ID</span>
+        </div>
+        <p class="displayLanguage">Language (Locale)</p>
+        <p class="genderAccent">Gender / Accent</p>
+        <p class="description">Description</p>
+        <div class="style-badges" aria-label="Voice styles"></div>
+      </div>
+      <div class="voice-action">
+        <button class="selectVoiceBtn" aria-label="Select this voice">
+          <i class="fas fa-check" aria-hidden="true"></i>
+          Use this voice
+        </button>
+      </div>
+    </div>
+  </template>
+
+  <!-- 🚨 에러 메시지 템플릿 -->
+  <template id="errorTemplate">
+    <div class="error-message" role="alert">
+      <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+      <span class="error-text"></span>
+    </div>
+  </template>
+
+  <!-- ✅ 성공 메시지 템플릿 -->
+  <template id="successTemplate">
+    <div class="success-message" role="status">
+      <i class="fas fa-check-circle" aria-hidden="true"></i>
+      <span class="success-text"></span>
+    </div>
+  </template>
 </body>
 </html>
 

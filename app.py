@@ -1,3 +1,4 @@
+# PromptOne - AI Voice Generator
 import os
 import json
 import logging
@@ -17,7 +18,7 @@ if not MURF_API_KEY or not GEMINI_API_KEY:
     raise RuntimeError("API 키가 누락되었습니다. .env 파일을 확인하세요.")
 
 app = Flask(__name__)
-db_session = init_db("sqlite:///db/voices.db")
+db_session = init_db("sqlite:///db/promptone_voices.db")
 CORS(app)
 
 logging.basicConfig(level=logging.DEBUG, format="%(levelname)s: %(message)s")
@@ -32,6 +33,16 @@ def get_voices():
         voices = db_session.query(VoiceLocale).all()
         result = []
         for v in voices:
+            # availableStyles가 JSON 문자열인 경우 파싱
+            available_styles = v.availableStyles
+            if isinstance(available_styles, str):
+                try:
+                    available_styles = json.loads(available_styles)
+                except json.JSONDecodeError:
+                    available_styles = []
+            elif available_styles is None:
+                available_styles = []
+            
             result.append({
                 "voiceId": v.voiceId,
                 "displayName": v.displayName,
@@ -40,7 +51,7 @@ def get_voices():
                 "accent": v.accent,
                 "description": v.description,
                 "gender": v.gender,
-                "availableStyles": v.availableStyles,
+                "availableStyles": available_styles,
                 #"supportedLocales": v.rawdata.get("supportedLocales", {}) if v.rawdata is not None else {}
             })
         return jsonify(result)

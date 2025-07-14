@@ -1,4 +1,4 @@
-# models/__init__.py
+# PromptOne - models/__init__.py
 import os
 from sqlalchemy import Column, Integer, String, JSON, UniqueConstraint, create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -24,7 +24,7 @@ class VoiceLocale(Base):
         UniqueConstraint('voiceId', 'locale', name='uq_voice_locale'),
     )
 
-def init_db(db_url="sqlite:///db/voices.db"):
+def init_db(db_url="sqlite:///db/promptone_voices.db"):
     os.makedirs("db", exist_ok=True)
     engine = create_engine(db_url)
     Base.metadata.create_all(engine)
